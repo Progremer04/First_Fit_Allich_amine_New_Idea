@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1682810716 source:c:\users\hackeruser\desktop\first_fit\main.cpp
+	<iostream>
+	<bits/stdc++.h>
+	<windows.h>
+
