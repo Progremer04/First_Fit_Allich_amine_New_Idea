@@ -1,4 +1,11 @@
 // time in this code cheack secend is like bite ;
+/*
+راه يافيشي صحيحة
+عندك كي تافيشيلك preoccssuc didn't work معنتها
+مالقاش بلصة فال zone الولة
+و راه يرروح للزاوجة
+و راك قالبهم 0 معنتها libre و 1 ocopy
+*/
 
 #include<iostream>
 #include<bits/stdc++.h>
@@ -29,6 +36,7 @@ Zone_Memoire* new_Zone_Memoire(string name_zone, int size_zone, int oc_lib) {
 
 // Method name must match the struct name
 Zone_Memoire* addatend(Zone_Memoire* head, string name_zo, int size_zo, int o_l) {
+
     if (head == NULL) {
         head = new_Zone_Memoire(name_zo, size_zo, o_l);
     } else {
@@ -52,11 +60,7 @@ void show_zone(Zone_Memoire* head) {
         Zone_Memoire* zone = head;
         while (zone != NULL) {
             cout << "Name Of Zone " << "\tSize of Zone ";
-            if (zone->oc_lib == 0) {
-                cout<<"\t\tis Occupee";
-            } else {
-                cout<<"\t\tis Libre";
-            }
+ (zone->oc_lib==0)?cout<<"\t\t is Libre":cout<<"\t\t is Occupee";
             cout << endl << "\t" << zone->Name_Zone << "\t" << zone->size_zone <<"\t KO"<<endl;
             zone = zone->next;
         }
@@ -107,7 +111,7 @@ void show_arryofbit(int array[],int Allocational_unit,int size)
     reversearray(array,size);
     int j;
     for (int i=0;i<size;++i){
-     //   cout<<endl<<"\t"<<i+1<<"\t \t"<<array[i];
+        cout<<endl<<"\t"<<i+1<<"\t \t"<<array[i];
     if ((i+1) % Allocational_unit == 0){cout<<endl;j=i;}
     }
 }
@@ -134,13 +138,12 @@ void array_bits(Zone_Memoire*zone,int arrays[],int Allocational_unit){
 //  tri vectors
 auto compair(Processus p1,Processus p2)
 {
-    return (p1.time_came>p2.time_came)? true:false;
+    return (p1.time_came<p2.time_came)? true:false;
 }
 void tridecroisant(vector <Processus>& processuses)
 {
     sort(processuses.begin(),processuses.end(),compair);
 }
-
 void first_fit_array(Zone_Memoire* zone, int array[], int size, int Allocational_unit, vector <Processus>& processuses)
 {
     array_bits(zone, array, Allocational_unit);
@@ -148,44 +151,30 @@ void first_fit_array(Zone_Memoire* zone, int array[], int size, int Allocational
     reversearray(array, size);
     tridecroisant(processuses);
     Zone_Memoire* zone1=NULL;
-    for (Processus& p : processuses) {
+if (!processuses.empty()){
+    for (Processus p : processuses) {
         zone1 = zone;
         bool trouve = false;
         while (zone1 != NULL && !trouve) {
             int n1 = zone1->size_zone / Allocational_unit;
             int n2 = p.size_process / Allocational_unit;
             if (n1 >= n2 && zone1->oc_lib == 0) {
-                Init_Table(array + (zone1->size_zone / Allocational_unit) - n2, n2, 1);
+                Init_Table(array + (zone1->size_zone / Allocational_unit) - n2, n2,0);
                 trouve = true;
-                //update in zone_memoire
-                zone1->oc_lib=1;
                 zone1->size_zone-=(n2*Allocational_unit);
                 cout << endl << p.name_process << " is working "<<endl;
-for (int i = 0; i < p.time_execute*100; ++i) {
+for (int i = 0; i < p.time_execute; ++i) {
 cout << "\r ...";
+Sleep(1);
             }
                 cout<<endl;
         }
             zone1 = zone1->next;
+    }
     if (!trouve) cout<<endl<<"\t    Presseccus    \t"<<p.name_process<<"didn'twork oops!"<<endl;
-    }
 }
 }
-/*
-void array_bits(Zone_Memoire*zone,int arrays[],int Allocational_unit){
-    int sizes=sum_zones_allocation_unit(zone,Allocational_unit);
-    if (zone!=NULL)
-    {
-        while(zone!=NULL)
-        {
-            sizes-=(zone->size_zone/Allocational_unit);
-            Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),1);
-            zone=zone->next;
-        }
-    }
 }
-
-*/
 int main() {
     Zone_Memoire* head = NULL;
     // Parties To Add Zone For similator First Fit
@@ -225,7 +214,7 @@ Color_id	Color	        Color_id  Color
         cout<<endl<<"Give me size Zone {\t|\t To Accept Value Of Size Of Proceess Must Be >= Allocational Unit \t"<<Allocational_unit<<"\t and can divise with here  \t|\t}\t:\t";cin>>size_zone;
         }while(!is_available_to_divide_with_allocational_unit(size_zone,Allocational_unit));
 
-        cout<<endl<<"Give me if Your Zone Libre Or Occopy  {\t   if your zone occopy write 0 or your zone is libre write  1  \t} ";cin>>j;
+        cout<<endl<<"Give me if Your Zone Libre Or Occopy  {\t   if your zone occopy write 1 or your zone is libre write  0  \t} ";cin>>j;
         occ_libre = (j==1)?1:0;
         head=addatend(head,name,size_zone,occ_libre);
         break;
@@ -268,7 +257,10 @@ Color_id	Color	        Color_id  Color
     }
     // end reading pressusse
     tridecroisant(processuses);
-    //show_Preseccus(processuses);
+
+    show_Preseccus(processuses);
+
+
 cout<<endl<<"before"<<endl;
 int size =sum_zones_allocation_unit(head,Allocational_unit);
 show_arryofbit(ar,Allocational_unit,sum_zones_allocation_unit(head,Allocational_unit));
