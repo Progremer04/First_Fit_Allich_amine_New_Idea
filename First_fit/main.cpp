@@ -130,7 +130,8 @@ void array_bits(Zone_Memoire*zone,int arrays[],int Allocational_unit){
         while(zone!=NULL)
         {
             sizes-=(zone->size_zone/Allocational_unit);
-            Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),1);
+
+      (zone->oc_lib==1)?Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),1):Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),0);
             zone=zone->next;
         }
     }
@@ -159,7 +160,7 @@ if (!processuses.empty()){
             int n1 = zone1->size_zone / Allocational_unit;
             int n2 = p.size_process / Allocational_unit;
             if (n1 >= n2 && zone1->oc_lib == 0) {
-                Init_Table(array + (zone1->size_zone / Allocational_unit) - n2, n2,0);
+                Init_Table(array + (zone1->size_zone / Allocational_unit) - n2, n2,1);
                 trouve = true;
                 zone1->size_zone-=(n2*Allocational_unit);
                 cout << endl << p.name_process << " is working "<<endl;
