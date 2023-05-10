@@ -1,0 +1,9 @@
+Hello  in this code 
+you need to 
+1- give progreme Allocational_unit.
+
+2- give progreme zone information don't stop all you finish exit .
+
+3- give progreme pressesucc information  don't stop all you finish exit .
+
+4- chose methode you need to similatteur the memoire using first fit
