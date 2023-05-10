@@ -166,7 +166,7 @@ if (!processuses.empty()){
                 cout << endl << p.name_process << " is working "<<endl;
 for (int i = 0; i < p.time_execute; ++i) {
 cout << "\r ...";
-Sleep(1);
+//Sleep(1);
             }
                 cout<<endl;
         }
@@ -176,34 +176,284 @@ Sleep(1);
 }
 }
 }
-int main() {
-    Zone_Memoire* head = NULL;
-    // Parties To Add Zone For similator First Fit
-/*
 
-Color_id	Color	        Color_id  Color
-1	        Blue	        9	      Light Blue
-2	        Green	        0         Black
-3	        Aqua	        A	      Light Green
-4	        Red	            B	      Light Aqua
-5	        Purple	        C	      Light Red
-6	        Yellow	        D	      Light Purple
-7	        White	        E	      Light Yellow
-8	        Gray	        F	      Bright White
-*/
+struct linked_list {
     string name;
+    bool free_occupy;
+    int address_begin;
+    int size;
+    linked_list* next;
+
+    linked_list(string name, int address, int size, bool free_occupy) :
+        name(name), free_occupy(free_occupy), address_begin(address), size(size), next(nullptr) {}
+};
+
+void add_node(linked_list*& head, string name, int address, int size, bool free_occupy) {
+    auto new_node = new linked_list(name, address, size, free_occupy);
+
+    if (head == nullptr) {
+        head = new_node;
+        head->next = head;
+    }
+    else {
+        auto temp = head;
+        while (temp->next != head) {
+            temp = temp->next;
+        }
+        temp->next = new_node;
+        new_node->next = head;
+    }
+}
+
+void update_node(linked_list* head, int address, int new_size, bool free_occupy) {
+    linked_list* curr = head;
+    do {
+        if (curr->address_begin == address) {
+            curr->free_occupy = free_occupy;
+            curr->size = new_size;
+            break;
+        }
+        curr = curr->next;
+    } while (curr != head);
+}
+
+void remove_node(linked_list*& head, int address) {
+    if (head == nullptr) {
+        return;
+    }
+
+    linked_list* curr = head;
+    linked_list* prev = nullptr;
+
+    do {
+        if (curr->address_begin == address) {
+            if (prev == nullptr) {
+                head = curr->next;
+            }
+            else {
+                prev->next = curr->next;
+            }
+            delete curr;
+            return;
+        }
+        prev = curr;
+        curr = curr->next;
+    } while (curr != head);
+}
+
+linked_list* find_node(linked_list* head, int address) {
+    linked_list* curr = head;
+    do {
+        if (curr->address_begin == address) {
+            return curr;
+        }
+        curr = curr->next;
+    } while (curr != head);
+    return nullptr;
+}
+
+void show_linked(linked_list* head) {
+    linked_list* curr = head;
+    if (head == nullptr) {
+        cout << "Linked list is empty." << endl;
+        return;
+    }
+    do {
+        cout << "Name: " << curr->name << endl;
+        cout << "Address begin: " << curr->address_begin << endl;
+        cout << "Size: " << curr->size << endl;
+        cout << "Free/Occupied: " << (curr->free_occupy ? "Free" : "Occupied") << endl;
+        cout << endl;
+        curr = curr->next;
+    } while (curr != head);
+}
+
+void first_fit_linked_list(linked_list *head, int Allocational_unit, vector<Processus> &processuses)
+{
+    // Initialize the linked list with free/unused memory zones
+    linked_list *curr = head;
+    do
+    {
+        curr->free_occupy = true;
+        curr = curr->next;
+    } while (curr != head);
+
+    // Sort the processes by decreasing size
+    sort(processuses.begin(), processuses.end(), compair);
+
+    // Allocate memory for each process
+    for (Processus p : processuses)
+    {
+        curr = head;
+        bool found = false;
+        do
+        {
+            int n1 = curr->size / Allocational_unit;
+            int n2 = p.size_process / Allocational_unit;
+            if (n1 >= n2 && curr->free_occupy)
+            {
+                // Update the linked list to mark the memory zone as occupied
+                int start_address = curr->address_begin;
+                if (n2 < n1)
+                {
+                    linked_list *new_node = new linked_list(curr->name, 0, 0, 0);
+                    new_node->address_begin = start_address;
+                    new_node->size = curr->size - p.size_process;
+                    new_node->free_occupy = true;
+                    new_node->next = curr->next;
+                    curr->next = new_node;
+                    curr = new_node;
+                }
+                else
+                {
+                    curr->free_occupy = false;
+                    curr->size = 0;
+                    curr = curr->next;
+                }
+
+                // Simulate the process execution time
+                cout << endl
+                     << p.name_process << " is working " << endl;
+                for (int i = 0; i < p.time_execute; ++i)
+                {
+                    cout << "\r ...";
+                }
+                cout << endl;
+
+                found = true;
+            }
+            curr = curr->next;
+        } while (curr != head && !found);
+        if (!found)
+        {
+            cout << endl
+                 << "\t Error! \t" << p.name_process << " couldn't be allocated memory!" << endl;
+        }
+    }
+}
+
+class looding{
+public:
+    int secend=80;
+    string namefile;
+  void menu()
+{
+
+    system("COLOR 0e");
+    system("cls");
+    SetConsoleCP(437);
+    SetConsoleOutputCP(437);
+    int bar1 = 177, bar2 = 219;
+    printf_s("\n\n\n\t\t\t\t Looding");
+    for (int j = 0; j < 10; j++)
+    {
+        printf_s(".");
+        Sleep(10);
+    }
+    printf_s("\n\n\n\t\t\t\t");
+    printf_s("\n\t\t\t\t This Work Was Creating By ");
+    printf_s("\n\n\n\t\t\t\t");
+    printf_s("\n\t\t\t\t    \t Alliche Amine Mohamed ");
+    printf_s("\n\t\t\t\t Hello In Memoire Similateur Programme You Find 2 Methods {\t array of bits | Linked List\t} \n\n\t\t\t\t This Programme Make You had a similateur about 2 type of similateur first fit \n\n\t\t\t\t Enjoy");
+    printf_s("\n\n\n\t\t\t\t");
+    Sleep(4);
+    for (int i = 0; i < 80; i++)
+    {
+
+        printf("%c", (char)bar2);
+        Sleep(100);
+    }
+    system("COLOR 0e");
+    printf_s("\n\n\n\t\t\t\t\n\n\n\t\t\t\t");
+    system("pause");
+    system("cls");
+    system("COLOR 0F");
+}
+  void menu1()
+{
+
+    system("COLOR 08");
+    system("cls");
+    SetConsoleCP(437);
+    SetConsoleOutputCP(437);
+    int bar1 = 177, bar2 = 219;
+    printf_s("\n\n\n\t\t\t\t Looding");
+    for (int j = 0; j < 10; j++)
+    {
+        printf_s(".");
+        Sleep(1);
+    }
+    printf_s("\n\n\n\t\t\t\t");
+    printf_s("\n\n\n\t\t\t\t");
+    //Sleep(4);
+    for (int i = 0; i <25; i++)
+    {
+        printf("%c", (char)bar2);
+        Sleep(20);
+    }
+
+    system("cls");
+    system("COLOR 0F");
+}
+
+void gotoxy(int x, int y)
+{
+    COORD coord = {0, 0}; // this is global variable
+    coord.X = x;
+    coord.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void showfile(string name)
+{
+
+    system("cls");
+    system("COLOR 07");
+    std:: ifstream inputFile(name);
+    int spaceCount = 0; // initialize a counter for spaces
+    char currentChar; // variable to store the current character
+
+    while (inputFile >> std::noskipws >> currentChar) { // read the file character by character
+        std::cout << currentChar;
+        if (currentChar ==' ') { // check if the current character is a space
+           Sleep(secend); // if it is, increment the counter
+        }else
+        {
+            Sleep(20);
+        }
+    }
+    inputFile.close(); // close the file
+
+    system("cls");
+    system("COLOR 0F");
+}
+};
+int main() {
+
+    looding Menues;
+    Menues.menu();
+    system("cls");
+    Zone_Memoire* head = NULL;
+    linked_list * linked_circulaire = NULL;
+  string name;
     int size_zone,j;
     bool occ_libre;
     bool exit_full_up_zone=1;
     int Allocational_unit;
-
+    int i=0;
+    Menues.menu1();
+    system("cls");
+    Menues.showfile("code.txt");
+    Menues.gotoxy(10,15);
+    system("cls");
     system("color a1");
     cout<<endl<<"|\t------------------------------------------------------------\t|"<<endl;
     cout<<endl<<"|\t\t give me  Allocational unit \t\t";cin>>Allocational_unit;
     cout<<endl<<"|\t------------------------------------------------------------\t|"<<endl;
     cout<<endl;
     system("color 0F");
-
+ Menues.gotoxy(10,15);
+    system("cls");
     while (exit_full_up_zone)
     {
         int choix;
@@ -218,14 +468,18 @@ Color_id	Color	        Color_id  Color
         cout<<endl<<"Give me if Your Zone Libre Or Occopy  {\t   if your zone occopy write 1 or your zone is libre write  0  \t} ";cin>>j;
         occ_libre = (j==1)?1:0;
         head=addatend(head,name,size_zone,occ_libre);
+
+i = (i == 0) ? 0 : i + (size_zone / Allocational_unit);
+        add_node(linked_circulaire, name, i, size_zone, occ_libre);
         break;
         }
         case 2:{exit_full_up_zone=false;break;}
         }
     }
-    show_zone(head);
-    int ar[sum_zones_allocation_unit(head,Allocational_unit)];
 
+    show_zone(head);
+    Sleep(2000);
+    int ar[sum_zones_allocation_unit(head,Allocational_unit)];
     array_bits(head,ar,Allocational_unit);
     //show_arryofbit(ar,Allocational_unit,(sum_zones(head)/Allocational_unit));
 
@@ -238,6 +492,8 @@ Color_id	Color	        Color_id  Color
     vector <Processus> processuses;
     Processus per;
     exit_full_up_zone=1;
+     Menues.gotoxy(10,15);
+    system("cls");
     while (exit_full_up_zone)
     {
         int choix;
@@ -260,13 +516,43 @@ Color_id	Color	        Color_id  Color
     tridecroisant(processuses);
 
     show_Preseccus(processuses);
+Sleep(10);
+/*
+  */
 
-
+ int n;
+  Menues.gotoxy(10,15);
+    system("cls");
+   cout<<"1- USING ARRAY OF BITS \n 2- USING LINKED LIST \n 3- EXIT\n 4- GIVE CHTOX";cin>>n;
+    switch(n){
+         Menues.gotoxy(10,15);
+    system("cls");
+case 1:
+    {
 cout<<endl<<"before"<<endl;
 int size =sum_zones_allocation_unit(head,Allocational_unit);
 show_arryofbit(ar,Allocational_unit,sum_zones_allocation_unit(head,Allocational_unit));
 first_fit_array(head,ar,size,Allocational_unit,processuses);
 cout<<endl<<"After"<<endl;
 show_arryofbit(ar,Allocational_unit,size);
+        break;
+    }
+    case 2:{
+cout<<endl<<"before"<<endl;
+  show_linked(linked_circulaire);
+  first_fit_linked_list(linked_circulaire,Allocational_unit,processuses);
+cout<<endl<<"After"<<endl;
+  show_linked(linked_circulaire);
+    break;
+    }
+    case 3:{
+         Menues.gotoxy(10,15);
+    string s="Thanks Using My Code";
+    for (int j=0;j<s.length();++j)
+        Sleep(10);
+exit(0);
+    }
+    }
+
     return 0;
 }
