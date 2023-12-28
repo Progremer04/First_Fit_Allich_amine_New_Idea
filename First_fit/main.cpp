@@ -14,14 +14,11 @@ using namespace std;
 
 // For Zone Memoire
 // Struct name should start with a capital letter
-
-// For Zone Memoire
-// Struct name should start with a capital letter
 struct Zone_Memoire {
     string Name_Zone;
     int size_zone;
     int oc_lib;
-    Zone_Memoire *next;
+    Zone_Memoire* next;
 };
 
 // Constructor name must match the struct name
@@ -36,7 +33,6 @@ Zone_Memoire* new_Zone_Memoire(string name_zone, int size_zone, int oc_lib) {
 
 // Method name must match the struct name
 Zone_Memoire* addatend(Zone_Memoire* head, string name_zo, int size_zo, int o_l) {
-
     if (head == NULL) {
         head = new_Zone_Memoire(name_zo, size_zo, o_l);
     } else {
@@ -45,23 +41,23 @@ Zone_Memoire* addatend(Zone_Memoire* head, string name_zo, int size_zo, int o_l)
     return head;
 }
 
-int sum_zones(Zone_Memoire*zone){
-    return (zone==NULL)? 0: zone->size_zone+sum_zones(zone->next);
+int sum_zones(Zone_Memoire* zone) {
+    return (zone == NULL) ? 0 : zone->size_zone + sum_zones(zone->next);
 }
-int sum_zones_allocation_unit(Zone_Memoire*zone,int Allocational_unit){
-    return (zone==NULL)? 0: ((zone->size_zone/Allocational_unit)+sum_zones_allocation_unit(zone->next,Allocational_unit));
+
+int sum_zones_allocation_unit(Zone_Memoire* zone, int Allocational_unit) {
+    return (zone == NULL) ? 0 : ((zone->size_zone / Allocational_unit) + sum_zones_allocation_unit(zone->next, Allocational_unit));
 }
 
 void show_zone(Zone_Memoire* head) {
-    // Fix the while loop condition, replace !zone with zone!=NULL
     if (head == NULL) {
-        cout<<"\n OOPS! Zone Is Vide \n";
+        cout << "\n OOPS! Zone Is Vide \n";
     } else {
         Zone_Memoire* zone = head;
         while (zone != NULL) {
             cout << "Name Of Zone " << "\tSize of Zone ";
- (zone->oc_lib==0)?cout<<"\t\t is Libre":cout<<"\t\t is Occupee";
-            cout << endl << "\t" << zone->Name_Zone << "\t" << zone->size_zone <<"\t KO"<<endl;
+            (zone->oc_lib == 0) ? cout << "\t\t is Libre" : cout << "\t\t is Occupee";
+            cout << endl << "\t" << zone->Name_Zone << "\t" << zone->size_zone << "\t KO" << endl;
             zone = zone->next;
         }
     }
@@ -69,113 +65,114 @@ void show_zone(Zone_Memoire* head) {
 
 // Struct name should start with a capital letter
 struct Processus {
-    public:
+public:
     string name_process;
     int time_came;
     int time_execute;
     int size_process;
 };
 
-/*
-seme code
 bool is_available_to_divide_with_allocational_unit(int size, int allocational_unit) {
-    if ((size % allocational_unit == 0) && (size >= allocational_unit)) {
-        return true;
-    } else if (!((size % allocational_unit == 0) && (size >= allocational_unit))) {
-            return false;
-        }
-    }
-*/
-bool is_available_to_divide_with_allocational_unit(int size, int allocational_unit) {
-    return ((size % allocational_unit == 0) && (size >= allocational_unit)) ? true : (!((size % allocational_unit == 0) && (size >= allocational_unit)) ? false : false);
+    return ((size % allocational_unit == 0) && (size >= allocational_unit));
 }
-// creat table de bit
-// this function using for table de bits
-// we gonna using linked list to creat
-void Init_Table(int arrayes[],int sizes,int value){ fill(arrayes,arrayes + sizes,value);}
-void reversearray(int e[],int size)
-{
-    int array1[size];int i=size-1,j=0;
-    while(i>=0){
-            array1[j]=e[i];
+
+void Init_Table(int arrayes[], int sizes, int value) {
+    fill(arrayes, arrayes + sizes, value);
+}
+
+void reversearray(int e[], int size) {
+    int array1[size];
+    int i = size - 1, j = 0;
+    while (i >= 0) {
+        array1[j] = e[i];
         --i;
         ++j;
     }
-    Init_Table(e,size,0);
-    for (i=0;i<size;++i) e[i]=array1[i];
+    Init_Table(e, size, 0);
+    for (i = 0; i < size; ++i) e[i] = array1[i];
+}
 
-    }
-// show array of array of bit
-void show_arryofbit(int array[],int Allocational_unit,int size)
-{
-    reversearray(array,size);
+void show_arryofbit(int array[], int Allocational_unit, int size) {
+    reversearray(array, size);
     int j;
-    for (int i=0;i<size;++i){
-        cout<<endl<<"\t"<<i+1<<"\t \t"<<array[i];
-    if ((i+1) % Allocational_unit == 0){cout<<endl;j=i;}
+    for (int i = 0; i < size; ++i) {
+        cout << endl << "\t" << i + 1 << "\t \t" << array[i];
+        if ((i + 1) % Allocational_unit == 0) { cout << endl; j = i; }
     }
 }
-void show_Preseccus(vector <Processus> array) {
+
+void show_Preseccus(vector<Processus> array) {
     cout << "Name Of Preseccus " << "\t\tTime came " << "\t\t Time execution" << "\t\tSize of Preseccus ";
 
-    for (Processus p : array){
-            cout << endl << "\t" << p.name_process << "\t\t\t" << p.time_came << "\t\t\t" << p.time_execute << "\t\t\t\t" << p.size_process <<"  KO"<<endl;
-
-        }
+    for (Processus p : array) {
+        cout << endl << "\t" << p.name_process << "\t\t\t" << p.time_came << "\t\t\t" << p.time_execute << "\t\t\t\t" << p.size_process << "  KO" << endl;
     }
-void array_bits(Zone_Memoire*zone,int arrays[],int Allocational_unit){
-    int sizes=sum_zones_allocation_unit(zone,Allocational_unit);
-    if (zone!=NULL)
-    {
-        while(zone!=NULL)
-        {
-            sizes-=(zone->size_zone/Allocational_unit);
+}
 
-      (zone->oc_lib==1)?Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),1):Init_Table(arrays + sizes,(zone->size_zone/Allocational_unit),0);
-            zone=zone->next;
+void array_bits(Zone_Memoire* zone, int arrays[], int Allocational_unit) {
+    int sizes = sum_zones_allocation_unit(zone, Allocational_unit);
+    if (zone != NULL) {
+        while (zone != NULL) {
+            sizes -= (zone->size_zone / Allocational_unit);
+            (zone->oc_lib == 1) ? Init_Table(arrays + sizes, (zone->size_zone / Allocational_unit), 1) : Init_Table(arrays + sizes, (zone->size_zone / Allocational_unit), 0);
+            zone = zone->next;
         }
     }
 }
-//  tri vectors
-auto compair(Processus p1,Processus p2)
-{
-    return (p1.time_came<p2.time_came)? true:false;
+
+auto compair(Processus p1, Processus p2) {
+    return (p1.time_came < p2.time_came) ? true : false;
 }
-void tridecroisant(vector <Processus>& processuses)
-{
-    sort(processuses.begin(),processuses.end(),compair);
+
+void tridecroisant(vector<Processus>& processuses) {
+    sort(processuses.begin(), processuses.end(), compair);
 }
-void first_fit_array(Zone_Memoire* zone, int array[], int size, int Allocational_unit, vector <Processus>& processuses)
-{
+
+void first_fit_array(Zone_Memoire* zone, int array[], int size, int Allocational_unit, vector<Processus>& processuses) {
     array_bits(zone, array, Allocational_unit);
-    Init_Table(array, sum_zones_allocation_unit(zone,Allocational_unit), 0);
-    reversearray(array, size);
+    Init_Table(array, size, 0);  // Initialize the array to 0
+
     tridecroisant(processuses);
-    Zone_Memoire* zone1=NULL;
-if (!processuses.empty()){
+
+    Zone_Memoire* zone1 = NULL;
+
     for (Processus p : processuses) {
         zone1 = zone;
         bool trouve = false;
+
         while (zone1 != NULL && !trouve) {
             int n1 = zone1->size_zone / Allocational_unit;
             int n2 = p.size_process / Allocational_unit;
+
             if (n1 >= n2 && zone1->oc_lib == 0) {
-                Init_Table(array + (zone1->size_zone / Allocational_unit) - n2, n2,1);
+                // Find the first suitable zone and allocate the process
+                int start_index = (zone1->size_zone / Allocational_unit) - n2;
+
+                for (int i = start_index; i < start_index + n2; ++i) {
+                    array[i] = 1;  // Mark the allocated blocks as occupied
+                }
+
                 trouve = true;
-                zone1->size_zone-=(n2*Allocational_unit);
-                cout << endl << p.name_process << " is working "<<endl;
-for (int i = 0; i < p.time_execute; ++i) {
-cout << "\r ...";
-//Sleep(1);
+                zone1->size_zone -= (n2 * Allocational_unit);
+                cout << endl << p.name_process << " is working " << endl;
+
+                for (int i = 0; i < p.time_execute; ++i) {
+                    cout << "\r ...";
+                    Sleep(1);  // Uncomment if you want to introduce a delay
+                }
+
+                cout << endl;
             }
-                cout<<endl;
-        }
+
             zone1 = zone1->next;
+        }
+
+        if (!trouve) {
+            cout << endl << "\t Presseccus \t" << p.name_process << " didn't work, oops!" << endl;
+        }
     }
-    if (!trouve) cout<<endl<<"\t    Presseccus    \t"<<p.name_process<<"didn'twork oops!"<<endl;
 }
-}
-}
+
 
 struct linked_list {
     string name;
@@ -268,66 +265,56 @@ void show_linked(linked_list* head) {
     } while (curr != head);
 }
 
-void first_fit_linked_list(linked_list *head, int Allocational_unit, vector<Processus> &processuses)
-{
-    // Initialize the linked list with free/unused memory zones
-    linked_list *curr = head;
-    do
-    {
+void first_fit_linked_list(linked_list* head, int Allocational_unit, vector<Processus>& processuses) {
+    linked_list* curr = head;
+    do {
         curr->free_occupy = true;
         curr = curr->next;
     } while (curr != head);
 
-    // Sort the processes by decreasing size
     sort(processuses.begin(), processuses.end(), compair);
 
-    // Allocate memory for each process
-    for (Processus p : processuses)
-    {
+    for (Processus p : processuses) {
         curr = head;
         bool found = false;
-        do
-        {
+        do {
             int n1 = curr->size / Allocational_unit;
             int n2 = p.size_process / Allocational_unit;
-            if (n1 >= n2 && curr->free_occupy)
-            {
-                // Update the linked list to mark the memory zone as occupied
+
+            if (n1 >= n2 && curr->free_occupy) {
+                // Allocate the process in the linked list
                 int start_address = curr->address_begin;
-                if (n2 < n1)
-                {
-                    linked_list *new_node = new linked_list(curr->name, 0, 0, 0);
+
+                if (n2 < n1) {
+                    linked_list* new_node = new linked_list(curr->name, 0, 0, 0);
                     new_node->address_begin = start_address;
                     new_node->size = curr->size - p.size_process;
                     new_node->free_occupy = true;
                     new_node->next = curr->next;
                     curr->next = new_node;
                     curr = new_node;
-                }
-                else
-                {
+                } else {
                     curr->free_occupy = false;
                     curr->size = 0;
                     curr = curr->next;
                 }
 
-                // Simulate the process execution time
-                cout << endl
-                     << p.name_process << " is working " << endl;
-                for (int i = 0; i < p.time_execute; ++i)
-                {
-                    cout << "\r ...";
-                }
-                cout << endl;
+                cout << endl << p.name_process << " is working " << endl;
 
+                for (int i = 0; i < p.time_execute; ++i) {
+                    cout << "\r ...";
+                    Sleep(1);  // Uncomment if you want to introduce a delay
+                }
+
+                cout << endl;
                 found = true;
             }
+
             curr = curr->next;
         } while (curr != head && !found);
-        if (!found)
-        {
-            cout << endl
-                 << "\t Error! \t" << p.name_process << " couldn't be allocated memory!" << endl;
+
+        if (!found) {
+            cout << endl << "\t Error! \t" << p.name_process << " couldn't be allocated memory!" << endl;
         }
     }
 }
